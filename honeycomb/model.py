@@ -23,10 +23,6 @@ class HoneyCombSession:
     return possible_session_name.startswith(SESSION_PREFIX)
 
   @staticmethod
-  def get_honeycomb_session_name(possible_session_name: str) -> str:
-    return f"{SESSION_PREFIX}{possible_session_name}"
-
-  @staticmethod
   def from_path(path: Path) -> HoneyCombSession:
     return HoneyCombSession(_cleanup_session_name(path.name.lower()))
 
@@ -34,8 +30,11 @@ class HoneyCombSession:
   def from_session_name(value: str) -> HoneyCombSession:
     if not HoneyCombSession.is_honeycomb_session(value):
       raise ValueError(f"Could not create HoneyCombSession with non HoneyComb session name {value}")
-    return HoneyCombSession(value.lower())
+    return HoneyCombSession(value.replace(SESSION_PREFIX, "").lower())
 
+  @staticmethod
+  def from_project_name(value: HoneyCombProjectName) -> HoneyCombSession:
+    return HoneyCombSession(value.value)
 
 class HoneyCombSessionsContainsNonHoneyCombSessions(Exception):
   pass
@@ -47,7 +46,7 @@ class HoneyCombSessions:
 
   def get_session_for_project(self, project: HoneyCombProject) -> HoneyCombSession | None:
     return next(
-      iter([x for x in self.sessions if HoneyCombSession.get_honeycomb_session_name(project.human_friendly_name) == x]),
+      iter([x for x in self.sessions if HoneyCombSession.from_project_name(project.human_friendly_name) == x]),
       None,
     )
 
