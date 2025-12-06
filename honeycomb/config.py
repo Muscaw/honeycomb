@@ -25,10 +25,28 @@ class Config:
     return Config(**config_data)  # pyright: ignore[reportUnknownArgumentType]
 
 
+def get_config_possible_paths() -> list[Path]:
+  possible_paths = [
+    (
+      Path.home() / ".config"
+      if "XDG_CONFIG_HOME" not in os.environ
+      else Path(os.path.expanduser(os.environ["XDG_CONFIG_HOME"]))
+    )
+  ]
+  if "XDG_CONFIG_DIRS" in os.environ:
+    possible_paths.extend([Path(os.path.expanduser(p)) for p in os.environ["XDG_CONFIG_DIRS"].split(":")])
+  return possible_paths
+
+
 def read_config() -> Config:
-  config_path = Path.home() / ".config" / "honeycomb" / "config.toml"
-  if not config_path.exists():
-    return Config()
-  with open(config_path, "rb") as file:
-    read_config = tomllib.load(file)
-    return Config.from_dict(read_config)
+  possible_paths = get_config_possible_paths()
+  for possible_path in possible_paths:
+    config_path = possible_path / "honeycomb" / "config.toml"
+    if not config_path.exists():
+      continue
+    with open(config_path, "rb") as file:
+      read_config = tomllib.load(file)
+      return Config.from_dict(read_config)
+  # No match, so we return a default config file
+  return Config()
+
