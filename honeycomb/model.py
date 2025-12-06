@@ -7,6 +7,7 @@ SESSION_PREFIX = "comb_"
 
 REPLACED_CHARS = [".", ":"]
 
+
 def _cleanup_session_name(session_name: str) -> str:
   for char in REPLACED_CHARS:
     session_name = session_name.replace(char, "_")
@@ -37,9 +38,6 @@ class HoneyCombSession:
   @staticmethod
   def from_project_name(value: HoneyCombProjectName) -> HoneyCombSession:
     return HoneyCombSession(_cleanup_session_name(value.value))
-
-class HoneyCombSessionsContainsNonHoneyCombSessions(Exception):
-  pass
 
 
 @dataclass(frozen=True)
