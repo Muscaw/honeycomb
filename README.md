@@ -2,7 +2,7 @@
 
 HoneyComb is a cli tool allowing easy management of your tmux environments.
 
-What HoneyComb provides:
+What HoneyComb provides the following features:
 - create pre-defined sessions based on projects found in your workspace
 - join pre-started session if one already exists in your environment
 
