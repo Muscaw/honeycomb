@@ -46,7 +46,8 @@ def list_sessions() -> HoneyCombSessions:
     text=True,
     capture_output=True,
   )
-  res.check_returncode()
+  if res.returncode != 0:
+    return HoneyCombSessions([])
   sessions = [x.removeprefix("'").removesuffix("'") for x in res.stdout.splitlines()]
   return HoneyCombSessions(
     [HoneyCombSession.from_session_name(x) for x in sessions if HoneyCombSession.is_honeycomb_session(x)]
