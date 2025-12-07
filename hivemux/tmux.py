@@ -61,7 +61,8 @@ def source_tmux_file(tmux_commands: str) -> None:
   ) as f:
     _ = f.write(tmux_commands)
     f.flush()
-    res = subprocess.run(["tmux", "source-file", str(Path(f.name).absolute())])
+    # we need to start the tmux server if no sessions are currently present as source-file does not do it for us
+    res = subprocess.run(["tmux", "start", ";", "source-file", str(Path(f.name).absolute())])
     res.check_returncode()
 
 
