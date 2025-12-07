@@ -17,7 +17,7 @@ uv version $version
 
 git add pyproject.toml uv.lock
 
-git commit -m "Bump project version"
+git commit -m "Bump project version to $version"
 git tag $version
 
 echo "Ready to push tag"
