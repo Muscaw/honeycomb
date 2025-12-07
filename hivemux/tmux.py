@@ -58,8 +58,6 @@ def list_sessions() -> HivemuxSessions:
 def source_tmux_file(tmux_commands: str) -> None:
   with NamedTemporaryFile(
     "w",
-    delete_on_close=False,
-    delete=False,
   ) as f:
     _ = f.write(tmux_commands)
     f.flush()
