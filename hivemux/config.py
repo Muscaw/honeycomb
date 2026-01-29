@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import glob
 import os
 import tomllib
 from dataclasses import dataclass, field
@@ -23,7 +24,9 @@ class Config:
     if "workspace_path" in data:
       config_data["workspace_path"] = Path(os.path.expanduser(data["workspace_path"]))  # pyright: ignore[reportAny]
     if "additional_search_paths" in data:
-      config_data["additional_search_paths"] = [Path(os.path.expanduser(d)) for d in data["additional_search_paths"]]  # pyright: ignore[reportAny]
+      config_data["additional_search_paths"] = [
+        Path(f) for d in data["additional_search_paths"] for f in glob.glob(os.path.expanduser(d))
+      ]  # pyright: ignore[reportAny]
     if "workspace_markers" in data:
       config_data["workspace_markers"] = data["workspace_markers"]
     if "hmrc" in data:
